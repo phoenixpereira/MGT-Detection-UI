@@ -17,27 +17,32 @@ def extract_text(pdf_file):
             text += page.extract_text()
     return text
 
-def detect_mgt(text):
-    # Split the text into chunks of maximum length accepted by the model
-    chunk_size = 512
-    chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-    # Initialise lists to store labels and scores
-    labels = []
-    scores = []
-    # Use the detector model to detect machine-generated text for each chunk
-    for chunk in chunks:
-        result = detector(chunk)
-        # Get the label and score
-        label = result[0]['label']
-        print(label)
-        score = result[0]['score']
-        labels.append(label)
-        scores.append(score)
-    return labels, scores
+def detect_mgt(text, pdf_file):
+    if pdf_file:
+        # If PDF file is uploaded, extract text from PDF
+        text = extract_text(pdf_file)
+    if text:
+        # Split the text into chunks of maximum length accepted by the model
+        chunk_size = 512
+        chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+        # Initialise lists to store labels and scores
+        labels = []
+        scores = []
+        # Use the detector model to detect machine-generated text for each chunk
+        for chunk in chunks:
+            result = detector(chunk)
+            # Get the label and score
+            label = result[0]['label']
+            score = result[0]['score']
+            labels.append(label)
+            scores.append(score)
+        return labels, scores
+    else:
+        return [], []
 
 iface = gr.Interface(
     fn=detect_mgt,
-    inputs="text",
+    inputs=["text", "file"],
     outputs=["text", "number"],
     title="MGT Detector",
     description="Detect the probability of machine-generated text in the input text."
