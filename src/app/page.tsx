@@ -12,14 +12,10 @@ import TextDisplay from "../components/TextDisplay";
 export default function Home() {
       const [text, setText] = useState<string>("");
 
-      const handleFileUpload = (fileContent: string) => {
-            setText(fileContent);
-      };
-
       return (
             <div className="container mx-auto p-8">
                   <h1 className="text-3xl font-bold mb-4">File Text Extractor</h1>
-                  <FileUpload onFileUpload={handleFileUpload} />
+                  <FileUpload />
                   {text && <TextDisplay text={text} />}
             </div>
       );
