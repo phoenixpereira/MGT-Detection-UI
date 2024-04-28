@@ -17,7 +17,8 @@ def extract_text(pdf_file):
             text += page.extract_text()
     return text
 
-def detect_mgt(text, pdf_file):
+def highlight_ai_generated(text, pdf_file):
+    highlighted_text = text
     if pdf_file:
         # If PDF file is uploaded, extract text from PDF
         text = extract_text(pdf_file)
@@ -25,27 +26,24 @@ def detect_mgt(text, pdf_file):
         # Split the text into chunks of maximum length accepted by the model
         chunk_size = 512
         chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-        # Count the occurrences of 'machine-generated' label
-        machine_generated_count = 0
         # Use the detector model to detect machine-generated text for each chunk
         for chunk in chunks:
             result = detector(chunk)
             # Get the label
             label = result[0]['label']
             if label == 'machine-generated':
-                machine_generated_count += 1
-        # Calculate the percentage of AI-generated text
-        ai_generated_percentage = (machine_generated_count / len(chunks)) * 100
-        return ai_generated_percentage
+                # Highlight the AI-generated text
+                highlighted_text = highlighted_text.replace(chunk, f"<span style='background-color: yellow;'>{chunk}</span>")
+        return highlighted_text
     else:
-        return 0
+        return ""
 
 iface = gr.Interface(
-    fn=detect_mgt,
+    fn=highlight_ai_generated,
     inputs=["text", "file"],
-    outputs="number",
-    title="AI Generated Text Detector",
-    description="Detect the percentage of AI-generated text in the input text."
+    outputs="html",
+    title="AI Generated Text Highlighter",
+    description="Highlight the text that the model thinks is AI-generated."
 )
 
 iface.launch()
