@@ -25,27 +25,27 @@ def detect_mgt(text, pdf_file):
         # Split the text into chunks of maximum length accepted by the model
         chunk_size = 512
         chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-        # Initialise lists to store labels and scores
-        labels = []
-        scores = []
+        # Count the occurrences of 'machine-generated' label
+        machine_generated_count = 0
         # Use the detector model to detect machine-generated text for each chunk
         for chunk in chunks:
             result = detector(chunk)
-            # Get the label and score
+            # Get the label
             label = result[0]['label']
-            score = result[0]['score']
-            labels.append(label)
-            scores.append(score)
-        return labels, scores
+            if label == 'machine-generated':
+                machine_generated_count += 1
+        # Calculate the percentage of AI-generated text
+        ai_generated_percentage = (machine_generated_count / len(chunks)) * 100
+        return ai_generated_percentage
     else:
-        return [], []
+        return 0
 
 iface = gr.Interface(
     fn=detect_mgt,
     inputs=["text", "file"],
-    outputs=["text", "number"],
-    title="MGT Detector",
-    description="Detect the probability of machine-generated text in the input text."
+    outputs="number",
+    title="AI Generated Text Detector",
+    description="Detect the percentage of AI-generated text in the input text."
 )
 
 iface.launch()
