@@ -1,21 +1,26 @@
 "use client";
 
-import Head from "next/head";
-import * as React from "react";
 import "@/lib/env";
+import React, { useState } from "react";
+import FileUpload from "../components/FileUpload";
+import TextDisplay from "../components/TextDisplay";
 
 // !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
 // Before you begin editing, follow all comments with `STARTERCONF`,
 // to customize the default configuration.
 
-export default function HomePage() {
+export default function Home() {
+      const [text, setText] = useState<string>("");
+
+      const handleFileUpload = (fileContent: string) => {
+            setText(fileContent);
+      };
+
       return (
-            <main>
-                  <section className="bg-white">
-                        <div className="layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center">
-                              <h1 className="mt-4">MGT Detection UI</h1>
-                        </div>
-                  </section>
-            </main>
+            <div className="container mx-auto p-8">
+                  <h1 className="text-3xl font-bold mb-4">File Text Extractor</h1>
+                  <FileUpload onFileUpload={handleFileUpload} />
+                  {text && <TextDisplay text={text} />}
+            </div>
       );
 }
