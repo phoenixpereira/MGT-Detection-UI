@@ -1,16 +1,20 @@
 import React, { useState } from "react";
+import "react-circular-progressbar/dist/styles.css";
 
 interface TextAnalyserProps {
   text: string;
+  setOverallResult: React.Dispatch<
+    React.SetStateAction<{
+      machineGeneratedProbability: number | null;
+      generatedText: string | null;
+    }>
+  >;
 }
 
-interface LabelScore {
-  label: string;
-  score: number;
-}
-
-const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({ text }) => {
-  const [machineGeneratedProbability, setMachineGeneratedProbability] = useState<number | null>(null);
+const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
+  text,
+  setOverallResult,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const CHUNK_SIZE = 705; // Maximum chunk size accepted by the model
@@ -25,7 +29,7 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({ text }) => {
         chunks.push(chunk);
       }
 
-      // Analyze each chunk and collect label-score pairs
+      // Analyse each chunk and collect label-score pairs
       let chatGPTScoreSum = 0;
       let chatGPTCount = 0;
       for (const chunk of chunks) {
@@ -38,7 +42,7 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({ text }) => {
               Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_API_TOKEN}`,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         const result = await response.json();
         if (Array.isArray(result[0])) {
@@ -57,9 +61,30 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({ text }) => {
       }
 
       // Calculate the probability of text being machine-generated
-      const machineGeneratedProbability = (chatGPTScoreSum / chatGPTCount) * 100;
+      const machineGeneratedProbability =
+        (chatGPTScoreSum / chatGPTCount) * 100;
 
-      setMachineGeneratedProbability(machineGeneratedProbability);
+      // Set generated text based on probability
+      let generatedText: string;
+      if (machineGeneratedProbability === null) {
+        generatedText = "Analysis result not available.";
+      } else if (machineGeneratedProbability <= 10) {
+        generatedText = "This text is highly likely to be human-generated.";
+      } else if (machineGeneratedProbability <= 25) {
+        generatedText = "This text is likely to be human-generated.";
+      } else if (machineGeneratedProbability <= 40) {
+        generatedText =
+          "This text may be human-generated or machine-generated.";
+      } else if (machineGeneratedProbability <= 60) {
+        generatedText =
+          "This text may be machine-generated or human-generated.";
+      } else if (machineGeneratedProbability <= 75) {
+        generatedText = "This text is likely to be machine-generated.";
+      } else {
+        generatedText = "This text is highly likely to be machine-generated.";
+      }
+
+      setOverallResult({ machineGeneratedProbability, generatedText });
     } catch (error) {
       console.error("Error analysing text:", error);
     } finally {
@@ -70,18 +95,12 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({ text }) => {
   return (
     <div>
       <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded-md"
         onClick={analyseText}
         disabled={loading}
       >
         {loading ? "Analysing..." : "Analyse Text"}
       </button>
-      {machineGeneratedProbability !== null && (
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold">Analysis Result</h2>
-          <p>Probability of text being machine-generated: {machineGeneratedProbability.toFixed(2)}%</p>
-        </div>
-      )}
     </div>
   );
 };
