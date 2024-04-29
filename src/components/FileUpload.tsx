@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import pdfToText from "react-pdftotext";
+import TextAnalyser from "./TextAnalyser";
 
 function FileUpload() {
       const [pdfText, setPdfText] = useState<string>("");
@@ -13,11 +14,8 @@ function FileUpload() {
             }
       };
 
-      const handleSubmit = () => {
-            const text = (document.getElementById("textInput") as HTMLTextAreaElement)?.value;
-            if (text) {
-                  setPdfText(text);
-            }
+      const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setPdfText(event.target.value);
       };
 
       return (
@@ -35,19 +33,9 @@ function FileUpload() {
                         id="textInput"
                         className="border border-gray-300 rounded-md p-4 w-full"
                         placeholder="Enter text here..."
+                        onChange={handleTextareaChange}
                   ></textarea>
-                  <button
-                        className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
-                        onClick={handleSubmit}
-                  >
-                        Submit
-                  </button>
-                  {pdfText && (
-                        <div className="mt-4 p-4 border border-gray-300 rounded-md">
-                              <h2 className="text-lg font-semibold mb-2">Extracted Text</h2>
-                              <p>{pdfText}</p>
-                        </div>
-                  )}
+                  {(pdfText || pdfText.trim() !== "") && <TextAnalyser text={pdfText} />}
             </div>
       );
 }
