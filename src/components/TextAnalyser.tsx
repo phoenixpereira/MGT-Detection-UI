@@ -3,10 +3,14 @@ import "react-circular-progressbar/dist/styles.css";
 
 interface TextAnalyserProps {
   text: string;
+  highlightedChunks: any[];
+  textChunks: any[];
   setOverallResult: React.Dispatch<
     React.SetStateAction<{
       machineGeneratedProbability: number | null;
       generatedText: string | null;
+      highlightedChunks: any[];
+      textChunks: any[];
     }>
   >;
 }
@@ -22,17 +26,18 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
   const analyseText = async () => {
     setLoading(true);
     try {
+      let textChunks = [];
       // Split the text into chunks
-      const chunks = [];
       for (let i = 0; i < text.length; i += CHUNK_SIZE) {
         const chunk = text.slice(i, i + CHUNK_SIZE);
-        chunks.push(chunk);
+        textChunks.push(chunk);
       }
 
       // Analyse each chunk and collect label-score pairs
       let chatGPTScoreSum = 0;
       let chatGPTCount = 0;
-      for (const chunk of chunks) {
+      let highlightedChunks = [];
+      for (const chunk of textChunks) {
         const response = await fetch(
           "https://api-inference.huggingface.co/models/Hello-SimpleAI/chatgpt-detector-roberta",
           {
@@ -49,6 +54,12 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
           // Extract each label-score pair
           for (const item of result[0]) {
             if (item.label === "ChatGPT") {
+              //   console.log("ChatGPT score:", item.score);
+              // If the chunk is likely to be machine-generated, mark it
+              if (item.score > 0.5) {
+                highlightedChunks.push(chunk);
+                console.log("Highlighted chunk:", chunk);
+              }
               chatGPTScoreSum += item.score;
               chatGPTCount++;
             }
@@ -84,7 +95,13 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
         generatedText = "This text is highly likely to be machine-generated.";
       }
 
-      setOverallResult({ machineGeneratedProbability, generatedText });
+      // Set the overall result including highlightedChunks
+      setOverallResult({
+        machineGeneratedProbability,
+        generatedText,
+        highlightedChunks,
+        textChunks,
+      });
     } catch (error) {
       console.error("Error analysing text:", error);
     } finally {

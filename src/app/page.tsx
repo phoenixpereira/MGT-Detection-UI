@@ -4,14 +4,19 @@ import "@/lib/env";
 import React, { useState } from "react";
 import FileUpload from "@/components/FileUpload";
 import OverallResults from "@/components/OverallResults";
+import HighlightedText from "@/components/HighlightedText";
 
 export default function Home() {
   const [overallResult, setOverallResult] = useState<{
     machineGeneratedProbability: number | null;
     generatedText: string | null;
+    highlightedChunks: any[];
+    textChunks: any[];
   }>({
     machineGeneratedProbability: null,
     generatedText: null,
+    highlightedChunks: [],
+    textChunks: [],
   });
 
   return (
@@ -24,7 +29,17 @@ export default function Home() {
           }
           generatedText={overallResult.generatedText}
         />
-        <FileUpload setOverallResult={setOverallResult} />
+        <FileUpload
+          setOverallResult={setOverallResult}
+          highlightedChunks={overallResult.highlightedChunks} // Passing highlightedChunks to FileUpload
+          textChunks={overallResult.textChunks}
+        />
+        {overallResult.generatedText && (
+          <HighlightedText
+            textChunks={overallResult.textChunks}
+            highlightedChunks={overallResult.highlightedChunks} // Passing highlightedChunks to HighlightedText
+          />
+        )}
       </div>
     </div>
   );

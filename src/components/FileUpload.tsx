@@ -7,11 +7,19 @@ interface FileUploadProps {
     React.SetStateAction<{
       machineGeneratedProbability: number | null;
       generatedText: string | null;
+      highlightedChunks: any[];
+      textChunks: any[];
     }>
   >;
+  highlightedChunks: any[];
+  textChunks: any[];
 }
 
-function FileUpload({ setOverallResult }: FileUploadProps) {
+const FileUpload: React.FunctionComponent<FileUploadProps> = ({
+  setOverallResult,
+  highlightedChunks,
+  textChunks,
+}) => {
   const [pdfText, setPdfText] = useState<string>("");
 
   const extractText = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,10 +57,15 @@ function FileUpload({ setOverallResult }: FileUploadProps) {
         onChange={handleTextareaChange}
       ></textarea>
       {(pdfText || pdfText.trim() !== "") && (
-        <TextAnalyser text={pdfText} setOverallResult={setOverallResult} />
+        <TextAnalyser
+          text={pdfText}
+          setOverallResult={setOverallResult}
+          highlightedChunks={highlightedChunks}
+          textChunks={textChunks}
+        />
       )}
     </div>
   );
-}
+};
 
 export default FileUpload;
