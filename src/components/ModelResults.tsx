@@ -1,9 +1,7 @@
 import React from "react";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import CircularProgressBar from "./CircularProgressbar";
+import CircularProgressBar from "./CircularProgressBar";
 
-interface OverallResultsProps {
+interface ModelResultsProps {
   machineGeneratedProbability: number | null;
   generatedText: string | null;
   model1Result: number | null;
@@ -11,26 +9,13 @@ interface OverallResultsProps {
   model3Result: number | null;
 }
 
-const OverallResults: React.FunctionComponent<OverallResultsProps> = ({
+const ModelResults: React.FunctionComponent<ModelResultsProps> = ({
   machineGeneratedProbability,
   generatedText,
   model1Result,
   model2Result,
   model3Result,
-}) => {
-const getProgressBarColor = (percentage: number): string => {
-    if (percentage === null) return "gray-400"; // Default colour for null probability
-    if (percentage <= 10) {
-        return "red-500";
-    } else if (percentage <= 25) {
-        return "orange-500";
-    } else if (percentage <= 40) {
-        return "orange-700";
-    } else {
-        return "green-500";
-    }
-};
-    
+}) => {    
     machineGeneratedProbability = ((model1Result ?? 0) + (model2Result ?? 0) + (model3Result ?? 0)) / 3;
 
   return (
@@ -94,4 +79,4 @@ const getProgressBarColor = (percentage: number): string => {
   );
 };
 
-export default OverallResults;
+export default ModelResults;

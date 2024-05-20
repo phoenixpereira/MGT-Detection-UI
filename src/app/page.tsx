@@ -3,7 +3,7 @@
 import "@/lib/env";
 import React, { useState } from "react";
 import FileUpload from "@/components/FileUpload";
-import OverallResults from "@/components/OverallResults";
+import ModelResults from "@/components/ModelResults";
 import HighlightedText from "@/components/HighlightedText";
 
 export default function Home() {
@@ -29,7 +29,7 @@ export default function Home() {
               <h1 className="text-3xl font-bold mb-4">MGT Detector</h1>
               <div className="grid grid-cols-1 gap-4">
                     {isSubmitted && (
-                          <OverallResults
+                          <ModelResults
                                 machineGeneratedProbability={
                                       overallResult.machineGeneratedProbability
                                 }
