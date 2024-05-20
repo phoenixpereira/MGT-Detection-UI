@@ -1,6 +1,7 @@
 import React from "react";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import CircularProgressBar from "./CircularProgressbar";
 
 interface OverallResultsProps {
   machineGeneratedProbability: number | null;
@@ -34,24 +35,14 @@ const getProgressBarColor = (percentage: number): string => {
 
   return (
         <div className="flex mt-4 border border-gray-300 p-4 rounded-md shadow-md">
-              <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex flex-row py-4 md:py-0 border-b border-r-0 md:border-r md:border-b-0 border-gray-300 ">
+              <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="flex flex-row py-4 lg:py-0 border-b border-r-0 lg:border-r lg:border-b-0 border-gray-300 ">
                           <div>
-                                <div className="w-24 h-24 mx-auto">
-                                      <CircularProgressbar
-                                            value={machineGeneratedProbability || 0}
-                                            text={`${machineGeneratedProbability ? machineGeneratedProbability.toFixed(2) : "0"}%`}
-                                            styles={{
-                                                  root: { width: "100%" },
-                                                  path: {
-                                                        stroke: getProgressBarColor(
-                                                              machineGeneratedProbability || 0
-                                                        )
-                                                  },
-                                                  trail: { stroke: "gray-400" },
-                                                  text: { fill: "black", fontSize: "14px" }
-                                            }}
-                                      />
+                                <div className="mx-auto">
+                                      <CircularProgressBar
+                                            percentage={machineGeneratedProbability}
+                                            radius={55}
+                                      ></CircularProgressBar>
                                 </div>
                           </div>
                           <div className="px-4">
@@ -64,65 +55,35 @@ const getProgressBarColor = (percentage: number): string => {
                                 </p>
                           </div>
                     </div>
-                    <div className="flex flex-col md:flex-row">
+                    <div className="flex flex-col lg:flex-row">
                           <h1 className="text-lg font-semibold">
                                 Individual Model Machine Generated Probability
                           </h1>
-                          <div className="mt-2 md:mt-0 flex flex-row gap-4">
+                          <div className="mt-2 lg:mt-0 flex flex-row gap-4">
                                 <div>
-                                      <div className="w-20 h-20 md:w-24 md:h-24 mx-auto">
-                                            <CircularProgressbar
-                                                  value={model1Result || 0}
-                                                  text={`${model1Result ? model1Result.toFixed(2) : "0"}%`}
-                                                  styles={{
-                                                        root: { width: "100%" },
-                                                        path: {
-                                                              stroke: getProgressBarColor(
-                                                                    model1Result || 0
-                                                              )
-                                                        },
-                                                        trail: { stroke: "gray-400" },
-                                                        text: { fill: "black", fontSize: "14px" }
-                                                  }}
-                                            />
+                                      <div className="mx-auto">
+                                            <CircularProgressBar
+                                                  percentage={model1Result}
+                                                  radius={45}
+                                            ></CircularProgressBar>
                                       </div>
                                       <p className="text-center">Model 1</p>
                                 </div>
                                 <div>
-                                      <div className="w-20 h-20 md:w-24 md:h-24 mx-auto">
-                                            <CircularProgressbar
-                                                  value={model2Result || 0}
-                                                  text={`${model2Result ? model2Result.toFixed(2) : "0"}%`}
-                                                  styles={{
-                                                        root: { width: "100%" },
-                                                        path: {
-                                                              stroke: getProgressBarColor(
-                                                                    model2Result || 0
-                                                              )
-                                                        },
-                                                        trail: { stroke: "gray-400" },
-                                                        text: { fill: "black", fontSize: "14px" }
-                                                  }}
-                                            />
+                                      <div className="mx-auto">
+                                            <CircularProgressBar
+                                                  percentage={model2Result}
+                                                  radius={45}
+                                            ></CircularProgressBar>
                                       </div>
                                       <p className="text-center">Model 2</p>
                                 </div>
                                 <div>
-                                      <div className="w-20 h-20 md:w-24 md:h-24 mx-auto">
-                                            <CircularProgressbar
-                                                  value={model3Result || 0}
-                                                  text={`${model3Result ? model3Result.toFixed(2) : "0"}%`}
-                                                  styles={{
-                                                        root: { width: "100%" },
-                                                        path: {
-                                                              stroke: getProgressBarColor(
-                                                                    model3Result || 0
-                                                              )
-                                                        },
-                                                        trail: { stroke: "gray-400" },
-                                                        text: { fill: "black", fontSize: "14px" }
-                                                  }}
-                                            />
+                                      <div className="mx-auto">
+                                            <CircularProgressBar
+                                                  percentage={model3Result}
+                                                  radius={45}
+                                            ></CircularProgressBar>
                                       </div>
                                       <p className="text-center">Model 3</p>
                                 </div>
