@@ -17,18 +17,20 @@ const OverallResults: React.FunctionComponent<OverallResultsProps> = ({
   model2Result,
   model3Result,
 }) => {
-  const getProgressBarColor = (percentage: number): string => {
+const getProgressBarColor = (percentage: number): string => {
     if (percentage === null) return "gray-400"; // Default colour for null probability
     if (percentage <= 10) {
-      return "red-500";
+        return "red-500";
     } else if (percentage <= 25) {
-      return "orange-500";
+        return "orange-500";
     } else if (percentage <= 40) {
-      return "orange-700";
+        return "orange-700";
     } else {
-      return "green-500";
+        return "green-500";
     }
-  };
+};
+    
+    machineGeneratedProbability = ((model1Result ?? 0) + (model2Result ?? 0) + (model3Result ?? 0)) / 3;
 
   return (
     <div className="flex mt-4">
