@@ -32,81 +32,99 @@ const OverallResults: React.FunctionComponent<OverallResultsProps> = ({
 
       return (
             <div className="flex mt-4">
-                  <div className="w-1/4">
-                        <div className="w-24 h-24 mx-auto">
-                              <CircularProgressbar
-                                    value={machineGeneratedProbability || 0}
-                                    text={`${machineGeneratedProbability ? machineGeneratedProbability.toFixed(2) : "0"}%`}
-                                    styles={{
-                                          root: { width: "100%" },
-                                          path: {
-                                                stroke: getProgressBarColor(
-                                                      machineGeneratedProbability || 0
-                                                )
-                                          },
-                                          trail: { stroke: "gray-400" },
-                                          text: { fill: "black", fontSize: "14px" }
-                                    }}
-                              />
+                  <div className="flex flex-col md:flex-row gap-4">
+                        <div className="flex flex-row">
+                              <div>
+                                    <div className="w-24 h-24 mx-auto">
+                                          <CircularProgressbar
+                                                value={machineGeneratedProbability || 0}
+                                                text={`${machineGeneratedProbability ? machineGeneratedProbability.toFixed(2) : "0"}%`}
+                                                styles={{
+                                                      root: { width: "100%" },
+                                                      path: {
+                                                            stroke: getProgressBarColor(
+                                                                  machineGeneratedProbability || 0
+                                                            )
+                                                      },
+                                                      trail: { stroke: "gray-400" },
+                                                      text: { fill: "black", fontSize: "14px" }
+                                                }}
+                                          />
+                                    </div>
+                                    <p className="text-center">Average</p>
+                              </div>
+                              <div className="px-4">
+                                    <h1 className="text-lg font-semibold">
+                                          Overall Machine Generated Probability
+                                    </h1>
+                                    <p className="mt-2">
+                                          {generatedText ||
+                                                "Please upload a file or enter text to analyse."}
+                                    </p>
+                              </div>
                         </div>
-                        <p className="text-center">Average</p>
-                  </div>
-                  <div className="w-1/2 px-4">
-                        <h1 className="text-lg font-semibold">Overall Results</h1>
-                        <p className="mt-2">
-                              {generatedText || "Please upload a file or enter text to analyse."}
-                        </p>
-                  </div>
-                  <div className="w-1/4">
-                        <div className="w-24 h-24 mx-auto">
-                              <CircularProgressbar
-                                    value={model1Result || 0}
-                                    text={`${model1Result ? model1Result.toFixed(2) : "0"}%`}
-                                    styles={{
-                                          root: { width: "100%" },
-                                          path: {
-                                                stroke: getProgressBarColor(model1Result || 0)
-                                          },
-                                          trail: { stroke: "gray-400" },
-                                          text: { fill: "black", fontSize: "14px" }
-                                    }}
-                              />
+                        <div className="flex flex-row gap-4">
+                              <h1 className="text-lg font-semibold">
+                                    Individual Model Machine Generated Probability
+                              </h1>
+                              <div>
+                                    <div className="w-24 h-24 mx-auto">
+                                          <CircularProgressbar
+                                                value={model1Result || 0}
+                                                text={`${model1Result ? model1Result.toFixed(2) : "0"}%`}
+                                                styles={{
+                                                      root: { width: "100%" },
+                                                      path: {
+                                                            stroke: getProgressBarColor(
+                                                                  model1Result || 0
+                                                            )
+                                                      },
+                                                      trail: { stroke: "gray-400" },
+                                                      text: { fill: "black", fontSize: "14px" }
+                                                }}
+                                          />
+                                    </div>
+                                    <p className="text-center">Model 1</p>
+                              </div>
+                              <div>
+                                    <div className="w-24 h-24 mx-auto">
+                                          <CircularProgressbar
+                                                value={model2Result || 0}
+                                                text={`${model2Result ? model2Result.toFixed(2) : "0"}%`}
+                                                styles={{
+                                                      root: { width: "100%" },
+                                                      path: {
+                                                            stroke: getProgressBarColor(
+                                                                  model2Result || 0
+                                                            )
+                                                      },
+                                                      trail: { stroke: "gray-400" },
+                                                      text: { fill: "black", fontSize: "14px" }
+                                                }}
+                                          />
+                                    </div>
+                                    <p className="text-center">Model 2</p>
+                              </div>
+                              <div>
+                                    <div className="w-24 h-24 mx-auto">
+                                          <CircularProgressbar
+                                                value={model3Result || 0}
+                                                text={`${model3Result ? model3Result.toFixed(2) : "0"}%`}
+                                                styles={{
+                                                      root: { width: "100%" },
+                                                      path: {
+                                                            stroke: getProgressBarColor(
+                                                                  model3Result || 0
+                                                            )
+                                                      },
+                                                      trail: { stroke: "gray-400" },
+                                                      text: { fill: "black", fontSize: "14px" }
+                                                }}
+                                          />
+                                    </div>
+                                    <p className="text-center">Model 3</p>
+                              </div>
                         </div>
-                        <p className="text-center">Model 1</p>
-                  </div>
-                  <div className="w-1/4">
-                        <div className="w-24 h-24 mx-auto">
-                              <CircularProgressbar
-                                    value={model2Result || 0}
-                                    text={`${model2Result ? model2Result.toFixed(2) : "0"}%`}
-                                    styles={{
-                                          root: { width: "100%" },
-                                          path: {
-                                                stroke: getProgressBarColor(model2Result || 0)
-                                          },
-                                          trail: { stroke: "gray-400" },
-                                          text: { fill: "black", fontSize: "14px" }
-                                    }}
-                              />
-                        </div>
-                        <p className="text-center">Model 2</p>
-                  </div>
-                  <div className="w-1/4">
-                        <div className="w-24 h-24 mx-auto">
-                              <CircularProgressbar
-                                    value={model3Result || 0}
-                                    text={`${model3Result ? model3Result.toFixed(2) : "0"}%`}
-                                    styles={{
-                                          root: { width: "100%" },
-                                          path: {
-                                                stroke: getProgressBarColor(model3Result || 0)
-                                          },
-                                          trail: { stroke: "gray-400" },
-                                          text: { fill: "black", fontSize: "14px" }
-                                    }}
-                              />
-                        </div>
-                        <p className="text-center">Model 3</p>
                   </div>
             </div>
       );
