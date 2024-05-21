@@ -40,15 +40,11 @@ def export_to_json(file_name, stats):
         json.dump(stats, file, ensure_ascii=False, indent=4)
 
 
-def create_frequency_ranges(stats):
-    # Determine the minimum and maximum values from the stats
-    min_val = min(stats)
-    max_val = max(stats)
-
+def create_frequency_ranges(stats, min_val, max_val):
     # Calculate the range size
     range_size = (max_val - min_val) / 50
 
-    # Initialise the frequency ranges
+    # Initialize the frequency ranges
     frequency_ranges = {}
 
     # Loop through the stats and assign each value to a range
@@ -88,15 +84,27 @@ def main():
             ai_lex_diversity.append(analysis["lexical_diversity"])
             ai_avg_sentence_length.append(analysis["average_word_count"])
 
+    # Determine the minimum and maximum values from the combined stats for lexical diversity
+    all_lex_diversity = human_lex_diversity + ai_lex_diversity
+    lex_div_min_val = min(all_lex_diversity)
+    lex_div_max_val = max(all_lex_diversity)
+
+    # Determine the minimum and maximum values from the combined stats for average sentence length
+    all_avg_sentence_length = human_avg_sentence_length + ai_avg_sentence_length
+    avg_sent_len_min_val = min(all_avg_sentence_length)
+    avg_sent_len_max_val = max(all_avg_sentence_length)
+
     # Create frequency ranges for lexical diversity
-    human_lex_diversity_ranges = create_frequency_ranges(human_lex_diversity)
-    ai_lex_diversity_ranges = create_frequency_ranges(ai_lex_diversity)
+    human_lex_diversity_ranges = create_frequency_ranges(
+        human_lex_diversity, lex_div_min_val, lex_div_max_val)
+    ai_lex_diversity_ranges = create_frequency_ranges(
+        ai_lex_diversity, lex_div_min_val, lex_div_max_val)
 
     # Create frequency ranges for average sentence length
     human_avg_sentence_length_ranges = create_frequency_ranges(
-        human_avg_sentence_length)
+        human_avg_sentence_length, avg_sent_len_min_val, avg_sent_len_max_val)
     ai_avg_sentence_length_ranges = create_frequency_ranges(
-        ai_avg_sentence_length)
+        ai_avg_sentence_length, avg_sent_len_min_val, avg_sent_len_max_val)
 
     # Sort frequency ranges by keys in ascending order
     sorted_human_lex_diversity_ranges = dict(
