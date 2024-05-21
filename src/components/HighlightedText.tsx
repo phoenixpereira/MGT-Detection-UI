@@ -42,9 +42,9 @@ const HighlightedText = ({
   };
 
   return (
-        <div className="p-4 border border-gray-300 rounded-md shadow-md">
-              {renderHighlightedText()}
-        </div>
+    <div className="p-4 border border-gray-300 rounded-md shadow-md">
+      {renderHighlightedText()}
+    </div>
   );
 };
 

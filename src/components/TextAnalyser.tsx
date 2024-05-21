@@ -2,21 +2,21 @@ import React, { useState } from "react";
 import "react-circular-progressbar/dist/styles.css";
 
 interface TextAnalyserProps {
-      text: string;
+  text: string;
+  highlightedChunks: any[];
+  textChunks: any[];
+  setOverallResult: React.Dispatch<
+    React.SetStateAction<{
+      machineGeneratedProbability: number | null;
+      generatedText: string | null;
       highlightedChunks: any[];
       textChunks: any[];
-      setOverallResult: React.Dispatch<
-            React.SetStateAction<{
-                  machineGeneratedProbability: number | null;
-                  generatedText: string | null;
-                  highlightedChunks: any[];
-                  textChunks: any[];
-            }>
-      >;
-      setModel1Result: React.Dispatch<React.SetStateAction<number | null>>;
-      setModel2Result: React.Dispatch<React.SetStateAction<number | null>>;
-      setModel3Result: React.Dispatch<React.SetStateAction<number | null>>;
-      setIsSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+    }>
+  >;
+  setModel1Result: React.Dispatch<React.SetStateAction<number | null>>;
+  setModel2Result: React.Dispatch<React.SetStateAction<number | null>>;
+  setModel3Result: React.Dispatch<React.SetStateAction<number | null>>;
+  setIsSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
@@ -24,10 +24,10 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
   setOverallResult,
   setModel1Result,
   setModel2Result,
-    setModel3Result,
+  setModel3Result,
   setIsSubmitted,
 }) => {
-    const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const CHUNK_SIZE = 705; // Maximum chunk size accepted by the model
 
@@ -50,8 +50,8 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
   ];
 
   const analyseText = async () => {
-      setLoading(true);
-      setIsSubmitted(true);
+    setLoading(true);
+    setIsSubmitted(true);
     try {
       let textChunks = [];
       let allScores = new Array(models.length).fill(0);
