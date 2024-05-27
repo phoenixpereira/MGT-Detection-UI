@@ -99,72 +99,73 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       const ctx = chartRef.current.getContext("2d");
 
       if (ctx) {
-        const labels = Object.keys(humanData);
+            const labels = Object.keys(humanData);
 
-        // Destroy existing chart if it exists
-        if (chartRef.current.chart) {
-          chartRef.current.chart.destroy();
-        }
-
-        chartRef.current.chart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Human",
-                data: labels.map((key) => humanData[key]),
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
-                borderColor: "rgba(255, 99, 132, 1)",
-                fill: true,
-                tension: 0.4,
-              },
-              {
-                label: "AI",
-                data: labels.map((key) => aiData[key]),
-                backgroundColor: "rgba(54, 162, 235, 0.2)",
-                borderColor: "rgba(54, 162, 235, 1)",
-                fill: true,
-                tension: 0.4,
-              },
-            ],
-          },
-          options: {
-            scales: {
-              x: {
-                type: "category", // Explicitly set the scale type to category
-                labels: labels, // Ensure all labels are present
-                ticks: {
-                  maxTicksLimit: 10,
-                },
-              },
-              y: {
-                beginAtZero: true,
-                suggestedMin:
-                  title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
-                suggestedMax: title === "Average Sentence Length" ? 100 : 1, // Set suggestedMax based on the chart title
-              },
-            },
-            plugins: {
-              title: {
-                display: true,
-                text: title,
-              },
-              annotation: {
-                annotations: [
-                  {
-                    type: "line",
-                    mode: "vertical",
-                    scaleID: "x",
-                    value: userTextValue,
-                    borderColor: "black",
-                    borderWidth: 3,
+            // Destroy existing chart if it exists
+            //@ts-ignore
+          if (chartRef.current.chart) {
+                //@ts-ignore
+                chartRef.current.chart.destroy();
+          }
+            //@ts-ignore
+            chartRef.current.chart = new Chart(ctx, {
+                  type: "line",
+                  data: {
+                        labels: labels,
+                        datasets: [
+                              {
+                                    label: "Human",
+                                    data: labels.map((key) => humanData[key]),
+                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                                    borderColor: "rgba(255, 99, 132, 1)",
+                                    fill: true,
+                                    tension: 0.4
+                              },
+                              {
+                                    label: "AI",
+                                    data: labels.map((key) => aiData[key]),
+                                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                                    borderColor: "rgba(54, 162, 235, 1)",
+                                    fill: true,
+                                    tension: 0.4
+                              }
+                        ]
                   },
-                ],
-              },
-            },
-          },
-        });
+                  options: {
+                        scales: {
+                              x: {
+                                    type: "category", // Explicitly set the scale type to category
+                                    labels: labels, // Ensure all labels are present
+                                    ticks: {
+                                          maxTicksLimit: 10
+                                    }
+                              },
+                              y: {
+                                    beginAtZero: true,
+                                    suggestedMin:
+                                          title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
+                                    suggestedMax: title === "Average Sentence Length" ? 100 : 1 // Set suggestedMax based on the chart title
+                              }
+                        },
+                        plugins: {
+                              title: {
+                                    display: true,
+                                    text: title
+                              },
+                              annotation: {
+                                    annotations: [
+                                          {
+                                                type: "line",
+                                                scaleID: "x",
+                                                value: userTextValue,
+                                                borderColor: "black",
+                                                borderWidth: 3
+                                          }
+                                    ]
+                              }
+                        }
+                  }
+            });
       }
     }
   };
