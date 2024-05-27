@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+//@ts-ignore
 import pdfToText from "react-pdftotext";
 import TextAnalyser from "./TextAnalyser";
 
