@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@next/env": "^14.2.3",
+    "@types/chart.js": "^2.9.41",
     "chart.js": "^4.4.3",
     "chartjs-plugin-annotation": "^3.0.1",
     "clsx": "^2.0.0",
