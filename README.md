@@ -1,5 +1,5 @@
 # Machine Generated Text (MGT) Detector UI
-This project is a machine-generated text detector that uses multiple models and text statistics to determine if text is machine-generated or not. It combines the power of various algorithms and statistical analysis to make accurate predictions regarding the origin of the text.
+This project is a machine-generated text detector that uses multiple existing MGT detection models through the Hugging Face API and text statistics to determine if text is machine-generated or not. It combines the power of various models and statistical analysis to make more accurate predictions regarding the origin of the text.
 
 ## Getting Started
 
