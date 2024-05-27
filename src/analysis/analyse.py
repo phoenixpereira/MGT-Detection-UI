@@ -46,7 +46,7 @@ def export_to_json(file_name, stats):
 
 
 def create_frequency_ranges(stats, min_val, max_val, range_size):
-    # Initialize the frequency ranges
+    # Initialise the frequency ranges
     frequency_ranges = {}
 
     # Loop through the stats and assign each value to a range
@@ -58,8 +58,7 @@ def create_frequency_ranges(stats, min_val, max_val, range_size):
         # Calculate the range index for the current stat
         range_index = int((stat - min_val) / range_size)
         range_start = min_val + range_index * range_size
-        range_end = range_start + range_size
-        range_label = f"{round(range_start, 2)} - {round(range_end, 2)}"
+        range_label = f"{round(range_start, 2)}"
 
         if range_label not in frequency_ranges:
             frequency_ranges[range_label] = 1
@@ -67,7 +66,6 @@ def create_frequency_ranges(stats, min_val, max_val, range_size):
             frequency_ranges[range_label] += 1
 
     return frequency_ranges
-
 
 def main():
     file_path = os.path.join(os.path.dirname(__file__), "all.jsonl")

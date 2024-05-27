@@ -14,12 +14,15 @@ def prepare_data(stats):
     frequencies = []
 
     for range_label, frequency in stats.items():
-        start, end = map(float, range_label.split(' - '))
-        mid_point = (start + end) / 2
-        values.extend([mid_point] * frequency)
-        frequencies.append(frequency)
+        try:
+            value = float(range_label)
+            values.extend([value] * frequency)
+            frequencies.append(frequency)
+        except ValueError:
+            print(f"Ignoring invalid range label: {range_label}")
 
     return np.array(values)
+
 
 
 def plot_distribution(human_data, ai_data, title, ax):
@@ -30,14 +33,14 @@ def plot_distribution(human_data, ai_data, title, ax):
 
 
 def main():
-    # Read data from JSON files
-    human_lexical_diversity_stats = read_stats(
-        'human_lexical_diversity_ranges.json')
-    ai_lexical_diversity_stats = read_stats('ai_lexical_diversity_ranges.json')
-    human_avg_sentence_length_stats = read_stats(
-        'human_avg_sentence_length_ranges.json')
-    ai_avg_sentence_length_stats = read_stats(
-        'ai_avg_sentence_length_ranges.json')
+    # Read data from JSON file
+    combined_data = read_stats('combined_analysis.json')
+
+    # Extract necessary statistics
+    human_lexical_diversity_stats = combined_data["human"]["lexical_diversity_ranges"]
+    ai_lexical_diversity_stats = combined_data["ai"]["lexical_diversity_ranges"]
+    human_avg_sentence_length_stats = combined_data["human"]["avg_sentence_length_ranges"]
+    ai_avg_sentence_length_stats = combined_data["ai"]["avg_sentence_length_ranges"]
 
     # Prepare data for plotting
     human_lexical_diversity_data = prepare_data(human_lexical_diversity_stats)

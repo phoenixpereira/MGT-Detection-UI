@@ -51,7 +51,9 @@ export default function Home() {
           setIsSubmitted={setIsSubmitted}
         />
         {overallResult.generatedText && (
-            <Statistics userText={overallResult.textChunks.join(' ')}></Statistics>
+          <Statistics
+            userText={overallResult.textChunks.join(" ")}
+          ></Statistics>
         )}
 
         {overallResult.generatedText && (

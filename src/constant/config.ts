@@ -1,7 +1,6 @@
 export const siteConfig = {
-  title: "Next.js + Tailwind CSS + TypeScript Starter",
+  title: "MGT Detector",
   description:
-    "A starter for Next.js, Tailwind CSS, and TypeScript with Absolute Import, Seo, Link component, pre-configured with Husky",
-  /** Without additional '/' on the end, e.g. https://theodorusclarence.com */
+    "A user-friendly tool to detect machine-generated text using multiple MGT detection models and statistics.",
   url: "https://tsnext-tw.thcl.dev",
 };
