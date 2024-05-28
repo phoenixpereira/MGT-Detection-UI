@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-      distDir: "out",
       webpack: (config) => {
             // set 'fs' to an empty module on the client to prevent this error on build --> Error: Can't resolve 'fs'
             config.resolve.fallback = {
