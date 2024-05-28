@@ -116,16 +116,16 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
                               {
                                     label: "Human",
                                     data: labels.map((key) => humanData[key]),
-                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                                    borderColor: "rgba(255, 99, 132, 1)",
+                                    backgroundColor: "rgba(54, 162, 235, 0.2)",
+                                    borderColor: "rgba(54, 162, 235, 1)",
                                     fill: true,
                                     tension: 0.4
                               },
                               {
                                     label: "AI",
                                     data: labels.map((key) => aiData[key]),
-                                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                                    borderColor: "rgba(54, 162, 235, 1)",
+                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                                    borderColor: "rgba(255, 99, 132, 1)",
                                     fill: true,
                                     tension: 0.4
                               }
@@ -170,18 +170,27 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
     }
   };
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div>
-        <h2>Average Sentence Length</h2>
-        <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
-      </div>
-      <div>
-        <h2>Lexical Diversity</h2>
-        <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <h3>Text Statistics</h3>
+                <p>
+                      To read the area curves below, observe the red for Machine Generated Text (MGT) distribution and blue for
+                      Human Generated Text (HGT). The black vertical line denotes the count of the related statistic for
+                      the text. Text that is more machine-generated would have this line align
+                      closer with the peak of the orange distribution.
+                </p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div>
+                            <h4>Average Sentence Length</h4>
+                            <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
+                      </div>
+                      <div>
+                            <h4>Lexical Diversity</h4>
+                            <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
+                      </div>
+                </div>
+          </div>
+    );
 };
 
 export default Statistics;
