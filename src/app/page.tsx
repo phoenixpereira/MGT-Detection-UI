@@ -23,56 +23,67 @@ export default function Home() {
   const [model1Result, setModel1Result] = useState<number | null>(null);
   const [model2Result, setModel2Result] = useState<number | null>(null);
   const [model3Result, setModel3Result] = useState<number | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    
+    const handleReload = () => {
+          window.location.reload();
+    };
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="border border-gray-300 p-4 lg:p-8 rounded-md shadow-md">
-        <h1 className="text-3xl font-bold mb-4">
-          Machine Generated Text (MGT) Detector
-        </h1>
-        <p>
-          This is a MGT detector that uses multiple existing MGT detection
-          models and text statistics to more accurately determine if text is
-          machine-generated or not. Start by selecting a PDF or manually
-          entering text.
-        </p>
-      </div>
-      <div className="mt-4 grid grid-cols-1 gap-4">
-        {isSubmitted && (
-          <ModelResults
-            machineGeneratedProbability={
-              overallResult.machineGeneratedProbability
-            }
-            generatedText={overallResult.generatedText}
-            model1Result={model1Result}
-            model2Result={model2Result}
-            model3Result={model3Result}
-          />
-        )}
-        <FileUpload
-          setOverallResult={setOverallResult}
-          setModel1Result={setModel1Result}
-          setModel2Result={setModel2Result}
-          setModel3Result={setModel3Result}
-          highlightedChunks={overallResult.highlightedChunks}
-          textChunks={overallResult.textChunks}
-          isSubmitted={isSubmitted}
-          setIsSubmitted={setIsSubmitted}
-        />
-        {overallResult.generatedText && (
-          <Statistics
-            userText={overallResult.textChunks.join(" ")}
-          ></Statistics>
-        )}
+        <div className="container mx-auto p-8">
+              <div className="border border-gray-300 p-4 lg:p-8 rounded-md shadow-md">
+                    <h1 className="text-3xl font-bold mb-4">
+                          Machine Generated Text (MGT) Detector
+                    </h1>
+                    <p>
+                          This is a MGT detector that uses multiple existing MGT detection models
+                          and text statistics to more accurately determine if text is
+                          machine-generated or not.
+                    </p>
+                    {!isSubmitted && <p>Start by selecting a PDF or manually entering text.</p>}
 
-        {overallResult.generatedText && (
-          <HighlightedText
-            textChunks={overallResult.textChunks}
-            highlightedChunks={overallResult.highlightedChunks}
-          />
-        )}
-      </div>
-    </div>
+                    {isSubmitted && (
+                          <button
+                                onClick={handleReload}
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                          >
+                                Start again
+                          </button>
+                    )}
+              </div>
+              <div className="mt-4 grid grid-cols-1 gap-4">
+                    {isSubmitted && (
+                          <ModelResults
+                                machineGeneratedProbability={
+                                      overallResult.machineGeneratedProbability
+                                }
+                                generatedText={overallResult.generatedText}
+                                model1Result={model1Result}
+                                model2Result={model2Result}
+                                model3Result={model3Result}
+                          />
+                    )}
+                    <FileUpload
+                          setOverallResult={setOverallResult}
+                          setModel1Result={setModel1Result}
+                          setModel2Result={setModel2Result}
+                          setModel3Result={setModel3Result}
+                          highlightedChunks={overallResult.highlightedChunks}
+                          textChunks={overallResult.textChunks}
+                          isSubmitted={isSubmitted}
+                          setIsSubmitted={setIsSubmitted}
+                    />
+                    {overallResult.generatedText && (
+                          <Statistics userText={overallResult.textChunks.join(" ")}></Statistics>
+                    )}
+
+                    {overallResult.generatedText && (
+                          <HighlightedText
+                                textChunks={overallResult.textChunks}
+                                highlightedChunks={overallResult.highlightedChunks}
+                          />
+                    )}
+              </div>
+        </div>
   );
 }
