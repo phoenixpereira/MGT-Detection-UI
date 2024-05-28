@@ -40,8 +40,10 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-        try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/combined_analysis.json`);
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/combined_analysis.json`,
+        );
         const data = await response.json();
 
         setHumanData({

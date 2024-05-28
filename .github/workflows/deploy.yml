@@ -80,8 +80,6 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml', '**/yarn.lock', '**/package-lock.json') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Set PUBLIC_URL environment variable
-        run: echo "PUBLIC_URL=/MGT-Detection-UI" >> $GITHUB_ENV
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
@@ -98,7 +96,10 @@ jobs:
     needs: build
     steps:
       - name: Set up environment variables
-        run: echo "NEXT_PUBLIC_HUGGINGFACE_API_TOKEN=${{ secrets.NEXT_PUBLIC_HUGGINGFACE_API_TOKEN }}" >> .env
+        run: |
+          echo "NEXT_PUBLIC_HUGGINGFACE_API_TOKEN=${{ secrets.NEXT_PUBLIC_HUGGINGFACE_API_TOKEN }}" >> .env
+          echo "NEXT_PUBLIC_URL=${{ env.NEXT_PUBLIC_URL }}" >> .env
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
