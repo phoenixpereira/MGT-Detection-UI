@@ -28,6 +28,7 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,6 +44,12 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # Automatically inject basePath in your Next.js configuration file and disable
+          # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
+          #
+          # You may remove this line if you want to manage the configuration yourself.
+          static_site_generator: next
 
       - name: Restore cache
         uses: actions/cache@v4
@@ -76,8 +83,5 @@ jobs:
     needs: build
     steps:  
       - name: Deploy to GitHub Pages
-        env:
-          NEXT_PUBLIC_HUGGINGFACE_API_TOKEN: ${{ env.NEXT_PUBLIC_HUGGINGFACE_API_TOKEN }}
-          NEXT_PUBLIC_URL: ${{ env.NEXT_PUBLIC_URL }}
         id: deployment
         uses: actions/deploy-pages@v4
