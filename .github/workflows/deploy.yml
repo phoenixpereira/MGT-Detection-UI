@@ -30,9 +30,6 @@ jobs:
           echo "NEXT_PUBLIC_URL=${{ secrets.NEXT_PUBLIC_URL }}" >> .env.local
 
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.6.1
+        uses: JamesIves/github-pages-deploy-action@4
         with:
-          branch: gh-pages
           folder: out
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
