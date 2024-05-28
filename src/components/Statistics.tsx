@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
+import Tooltip from "./Tooltip";
 
 Chart.register(annotationPlugin);
 
@@ -42,11 +43,6 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       try {
         const response = await fetch("/combined_analysis.json");
         const data = await response.json();
-
-        const avgSentenceLength = calculateAvgSentenceLength(userText);
-        console.log(avgSentenceLength);
-        const humanLexicalDiversity = calculateLexicalDiversity(userText);
-        console.log(humanLexicalDiversity);
 
         setHumanData({
           lexicalDiversity: data.human.lexical_diversity_ranges,
@@ -99,86 +95,102 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       const ctx = chartRef.current.getContext("2d");
 
       if (ctx) {
-            const labels = Object.keys(humanData);
+        const labels = Object.keys(humanData);
 
-            // Destroy existing chart if it exists
-            //@ts-ignore
-          if (chartRef.current.chart) {
-                //@ts-ignore
-                chartRef.current.chart.destroy();
-          }
-            //@ts-ignore
-            chartRef.current.chart = new Chart(ctx, {
-                  type: "line",
-                  data: {
-                        labels: labels,
-                        datasets: [
-                              {
-                                    label: "Human",
-                                    data: labels.map((key) => humanData[key]),
-                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                                    borderColor: "rgba(255, 99, 132, 1)",
-                                    fill: true,
-                                    tension: 0.4
-                              },
-                              {
-                                    label: "AI",
-                                    data: labels.map((key) => aiData[key]),
-                                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                                    borderColor: "rgba(54, 162, 235, 1)",
-                                    fill: true,
-                                    tension: 0.4
-                              }
-                        ]
+        // Destroy existing chart if it exists
+        //@ts-ignore
+        if (chartRef.current.chart) {
+          //@ts-ignore
+          chartRef.current.chart.destroy();
+        }
+        //@ts-ignore
+        chartRef.current.chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Human",
+                data: labels.map((key) => humanData[key]),
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                fill: true,
+                tension: 0.4,
+              },
+              {
+                label: "AI",
+                data: labels.map((key) => aiData[key]),
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                fill: true,
+                tension: 0.4,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category", // Explicitly set the scale type to category
+                labels: labels, // Ensure all labels are present
+                ticks: {
+                  maxTicksLimit: 10,
+                },
+              },
+              y: {
+                beginAtZero: true,
+                suggestedMin:
+                  title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
+                suggestedMax: title === "Average Sentence Length" ? 100 : 1, // Set suggestedMax based on the chart title
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: title,
+              },
+              annotation: {
+                annotations: [
+                  {
+                    type: "line",
+                    scaleID: "x",
+                    value: userTextValue,
+                    borderColor: "black",
+                    borderWidth: 3,
                   },
-                  options: {
-                        scales: {
-                              x: {
-                                    type: "category", // Explicitly set the scale type to category
-                                    labels: labels, // Ensure all labels are present
-                                    ticks: {
-                                          maxTicksLimit: 10
-                                    }
-                              },
-                              y: {
-                                    beginAtZero: true,
-                                    suggestedMin:
-                                          title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
-                                    suggestedMax: title === "Average Sentence Length" ? 100 : 1 // Set suggestedMax based on the chart title
-                              }
-                        },
-                        plugins: {
-                              title: {
-                                    display: true,
-                                    text: title
-                              },
-                              annotation: {
-                                    annotations: [
-                                          {
-                                                type: "line",
-                                                scaleID: "x",
-                                                value: userTextValue,
-                                                borderColor: "black",
-                                                borderWidth: 3
-                                          }
-                                    ]
-                              }
-                        }
-                  }
-            });
+                ],
+              },
+            },
+          },
+        });
       }
     }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <div>
-        <h2>Average Sentence Length</h2>
-        <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
-      </div>
-      <div>
-        <h2>Lexical Diversity</h2>
-        <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
+    <div className="border border-gray-300 p-4 lg:p-8 rounded-md shadow-md">
+      <h3>Text Statistics</h3>
+      <p>
+        To read the area curves below, observe the red for Machine Generated
+        Text (MGT) distribution and blue for Human Generated Text (HGT). The
+        black vertical line denotes the count of the related statistic for the
+        text. Text that is more machine-generated would have this line align
+        closer with the peak of the red distribution.
+      </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Average Sentence Length</h4>
+            <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
+          </div>
+          <Tooltip info="The average sentence length is the average number of words per sentence in the text." />
+        </div>
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Lexical Diversity</h4>
+            <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
+          </div>
+          <Tooltip info="The lexical diversity is a measure of how many different words appear in a text. It is the ratio of unique lexical items divided by the total number of words in the text." />
+        </div>
       </div>
     </div>
   );

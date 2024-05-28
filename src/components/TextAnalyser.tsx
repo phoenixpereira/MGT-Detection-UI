@@ -78,6 +78,14 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
               },
             },
           );
+
+          // Check for HTTP status codes
+          if (response.status === 429) {
+            throw new Error("Too many requests");
+          } else if (response.status === 503) {
+            throw new Error("Service unavailable");
+          }
+
           const result = await response.json();
           if (Array.isArray(result[0])) {
             // Extract each label-score pair
@@ -131,6 +139,17 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
       });
     } catch (error) {
       console.error("Error analysing text:", error);
+
+      // Display appropriate error message to the user
+      if ((error as Error).message === "Too many requests") {
+        alert(
+          "Too many requests sent to the Hugging Face API, please try again in 15 minutes.",
+        );
+      } else if ((error as Error).message === "Service unavailable") {
+        alert(
+          "Unable to connect to the models using the Hugging Face API, please reload the page and try again.",
+        );
+      }
     } finally {
       setLoading(false);
     }

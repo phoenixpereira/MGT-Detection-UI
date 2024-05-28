@@ -32,14 +32,28 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
   setIsSubmitted,
 }) => {
   const [pdfText, setPdfText] = useState<string>("");
+  const wordLimit = 2500;
+
+  const countWords = (text: string) => {
+    return text.trim().split(/\s+/).length;
+  };
 
   const extractText = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       pdfToText(file)
-        .then((text: string) => setPdfText(text))
+        .then((text: string) => {
+          if (countWords(text) > wordLimit) {
+            alert(
+              "The text exceeds the 2500 word limit. Please upload a shorter document.",
+            );
+            setPdfText("");
+          } else {
+            setPdfText(text);
+          }
+        })
         .catch((error: any) =>
-          console.error("Failed to extract text from pdf"),
+          console.error("Failed to extract text from PDF", error),
         );
     }
   };
@@ -47,13 +61,20 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
   const handleTextareaChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    setPdfText(event.target.value);
+    const text = event.target.value;
+    if (countWords(text) > wordLimit) {
+      alert(
+        "The text exceeds the 2500 word limit. Please enter a shorter text.",
+      );
+    } else {
+      setPdfText(text);
+    }
   };
 
   return (
     <div>
       {!isSubmitted && (
-        <div className="p-4 border border-gray-300 rounded-md shadow-md">
+        <div className="lg:p-8 p-4 border border-gray-300 rounded-md shadow-md">
           <p className="mb-4 text-lg font-semibold">
             Select a PDF or enter text.
           </p>
@@ -72,8 +93,9 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
             className="border border-gray-300 rounded-md p-4 w-full"
             placeholder="Enter text here..."
             onChange={handleTextareaChange}
+            value={pdfText}
           ></textarea>
-          {(pdfText || pdfText.trim() !== "") && (
+          {pdfText.trim() !== "" && (
             <TextAnalyser
               text={pdfText}
               setOverallResult={setOverallResult}

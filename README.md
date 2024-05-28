@@ -3,7 +3,29 @@ This project is a machine-generated text detector that uses multiple existing MG
 
 ## Getting Started
 
-To get started, please follow these steps:
+To analyse the dataset and generate statistics required for the graphs , please follow these steps:
+
+1. Go to the `analysis` folder
+
+```bash
+cd src/analysis
+```
+
+2. Run `analysis.py` to generate `combined_analysis.json`
+
+```bash
+python3 analysis.py
+```
+
+3. Run `graph.py` to verify that the results look valid (Optional)
+
+```bash
+python3 graph.py
+```
+
+3. Move `combined_analysis.json` to the `public` folder if updated.
+
+To run the user interface, please follow these steps:
 
 1. Install the dependencies.
 
