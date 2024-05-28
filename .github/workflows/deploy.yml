@@ -27,6 +27,8 @@ concurrency:
 jobs:
   # Build job
   build:
+    environment:
+      name: github-pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -82,8 +84,5 @@ jobs:
     needs: build
     steps:  
       - name: Deploy to GitHub Pages
-        env:
-          NEXT_PUBLIC_HUGGINGFACE_API_TOKEN: ${{ env.NEXT_PUBLIC_HUGGINGFACE_API_TOKEN }}
-          NEXT_PUBLIC_URL: ${{ env.NEXT_PUBLIC_URL }}
         id: deployment
         uses: actions/deploy-pages@v4
