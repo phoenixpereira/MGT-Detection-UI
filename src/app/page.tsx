@@ -28,7 +28,13 @@ export default function Home() {
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-4">MGT Detector</h1>
-      <div className="grid grid-cols-1 gap-4">
+      <p>
+        This is a machine-generated text detector that uses multiple existing
+        MGT detection models and text statistics to more accurately determine if
+        text is machine-generated or not. Start by selecting a PDF or manually
+        entering text.
+      </p>
+      <div className="mt-4 grid grid-cols-1 gap-4">
         {isSubmitted && (
           <ModelResults
             machineGeneratedProbability={

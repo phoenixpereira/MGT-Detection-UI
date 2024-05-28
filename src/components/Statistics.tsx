@@ -99,98 +99,99 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       const ctx = chartRef.current.getContext("2d");
 
       if (ctx) {
-            const labels = Object.keys(humanData);
+        const labels = Object.keys(humanData);
 
-            // Destroy existing chart if it exists
-            //@ts-ignore
-          if (chartRef.current.chart) {
-                //@ts-ignore
-                chartRef.current.chart.destroy();
-          }
-            //@ts-ignore
-            chartRef.current.chart = new Chart(ctx, {
-                  type: "line",
-                  data: {
-                        labels: labels,
-                        datasets: [
-                              {
-                                    label: "Human",
-                                    data: labels.map((key) => humanData[key]),
-                                    backgroundColor: "rgba(54, 162, 235, 0.2)",
-                                    borderColor: "rgba(54, 162, 235, 1)",
-                                    fill: true,
-                                    tension: 0.4
-                              },
-                              {
-                                    label: "AI",
-                                    data: labels.map((key) => aiData[key]),
-                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                                    borderColor: "rgba(255, 99, 132, 1)",
-                                    fill: true,
-                                    tension: 0.4
-                              }
-                        ]
+        // Destroy existing chart if it exists
+        //@ts-ignore
+        if (chartRef.current.chart) {
+          //@ts-ignore
+          chartRef.current.chart.destroy();
+        }
+        //@ts-ignore
+        chartRef.current.chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Human",
+                data: labels.map((key) => humanData[key]),
+                backgroundColor: "rgba(54, 162, 235, 0.2)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                fill: true,
+                tension: 0.4,
+              },
+              {
+                label: "AI",
+                data: labels.map((key) => aiData[key]),
+                backgroundColor: "rgba(255, 99, 132, 0.2)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                fill: true,
+                tension: 0.4,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                type: "category", // Explicitly set the scale type to category
+                labels: labels, // Ensure all labels are present
+                ticks: {
+                  maxTicksLimit: 10,
+                },
+              },
+              y: {
+                beginAtZero: true,
+                suggestedMin:
+                  title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
+                suggestedMax: title === "Average Sentence Length" ? 100 : 1, // Set suggestedMax based on the chart title
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: title,
+              },
+              annotation: {
+                annotations: [
+                  {
+                    type: "line",
+                    scaleID: "x",
+                    value: userTextValue,
+                    borderColor: "black",
+                    borderWidth: 3,
                   },
-                  options: {
-                        scales: {
-                              x: {
-                                    type: "category", // Explicitly set the scale type to category
-                                    labels: labels, // Ensure all labels are present
-                                    ticks: {
-                                          maxTicksLimit: 10
-                                    }
-                              },
-                              y: {
-                                    beginAtZero: true,
-                                    suggestedMin:
-                                          title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
-                                    suggestedMax: title === "Average Sentence Length" ? 100 : 1 // Set suggestedMax based on the chart title
-                              }
-                        },
-                        plugins: {
-                              title: {
-                                    display: true,
-                                    text: title
-                              },
-                              annotation: {
-                                    annotations: [
-                                          {
-                                                type: "line",
-                                                scaleID: "x",
-                                                value: userTextValue,
-                                                borderColor: "black",
-                                                borderWidth: 3
-                                          }
-                                    ]
-                              }
-                        }
-                  }
-            });
+                ],
+              },
+            },
+          },
+        });
       }
     }
   };
 
-    return (
+  return (
+    <div>
+      <h3>Text Statistics</h3>
+      <p>
+        To read the area curves below, observe the red for Machine Generated
+        Text (MGT) distribution and blue for Human Generated Text (HGT). The
+        black vertical line denotes the count of the related statistic for the
+        text. Text that is more machine-generated would have this line align
+        closer with the peak of the orange distribution.
+      </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
-            <h3>Text Statistics</h3>
-                <p>
-                      To read the area curves below, observe the red for Machine Generated Text (MGT) distribution and blue for
-                      Human Generated Text (HGT). The black vertical line denotes the count of the related statistic for
-                      the text. Text that is more machine-generated would have this line align
-                      closer with the peak of the orange distribution.
-                </p>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      <div>
-                            <h4>Average Sentence Length</h4>
-                            <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
-                      </div>
-                      <div>
-                            <h4>Lexical Diversity</h4>
-                            <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
-                      </div>
-                </div>
-          </div>
-    );
+          <h4>Average Sentence Length</h4>
+          <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
+        </div>
+        <div>
+          <h4>Lexical Diversity</h4>
+          <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Statistics;
