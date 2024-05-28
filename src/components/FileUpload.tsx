@@ -53,7 +53,7 @@ const FileUpload: React.FunctionComponent<FileUploadProps> = ({
   return (
     <div>
       {!isSubmitted && (
-        <div className="p-4 border border-gray-300 rounded-md shadow-md">
+        <div className="lg:p-8 p-4 border border-gray-300 rounded-md shadow-md">
           <p className="mb-4 text-lg font-semibold">
             Select a PDF or enter text.
           </p>

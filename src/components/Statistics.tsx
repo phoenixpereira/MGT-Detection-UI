@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
+import Tooltip from "./Tooltip";
 
 Chart.register(annotationPlugin);
 
@@ -171,7 +172,7 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
   };
 
   return (
-    <div>
+    <div className="border border-gray-300 p-4 lg:p-8 rounded-md shadow-md">
       <h3>Text Statistics</h3>
       <p>
         To read the area curves below, observe the red for Machine Generated
@@ -181,13 +182,19 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
         closer with the peak of the orange distribution.
       </p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div>
-          <h4>Average Sentence Length</h4>
-          <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Average Sentence Length</h4>
+            <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
+          </div>
+          <Tooltip info="The average sentence length is the average number of words per sentence in the text." />
         </div>
-        <div>
-          <h4>Lexical Diversity</h4>
-          <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Lexical Diversity</h4>
+            <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
+          </div>
+          <Tooltip info="The lexical diversity is a measure of how many different words appear in a text. It is the ratio of unique lexical items divided by the total number of words in the text." />
         </div>
       </div>
     </div>

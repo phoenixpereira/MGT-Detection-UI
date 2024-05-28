@@ -1,4 +1,5 @@
 import React from "react";
+import Tooltip from "./Tooltip";
 
 const HighlightedText = ({
   textChunks,
@@ -42,8 +43,9 @@ const HighlightedText = ({
   };
 
   return (
-    <div className="p-4 border border-gray-300 rounded-md shadow-md">
-      {renderHighlightedText()}
+    <div className="flex p-4 border border-gray-300 rounded-md shadow-md">
+      <div>{renderHighlightedText()}</div>
+      <Tooltip info="Chunks of text that the models believe are machine-generated are highlighted." />
     </div>
   );
 };
