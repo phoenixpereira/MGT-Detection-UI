@@ -143,11 +143,11 @@ const TextAnalyser: React.FunctionComponent<TextAnalyserProps> = ({
       // Display appropriate error message to the user
       if ((error as Error).message === "Too many requests") {
         alert(
-          "Too many requests sent to the Hugging Face API, please try again in a few minutes.",
+          "Too many requests sent to the Hugging Face API, please try again in 15 minutes.",
         );
       } else if ((error as Error).message === "Service unavailable") {
         alert(
-          "Unable to connect to the model using the Hugging Face API, please reload the page and try again.",
+          "Unable to connect to the models using the Hugging Face API, please reload the page and try again.",
         );
       }
     } finally {

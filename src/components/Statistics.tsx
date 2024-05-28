@@ -174,7 +174,7 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
         Text (MGT) distribution and blue for Human Generated Text (HGT). The
         black vertical line denotes the count of the related statistic for the
         text. Text that is more machine-generated would have this line align
-        closer with the peak of the orange distribution.
+        closer with the peak of the red distribution.
       </p>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="flex mr-8">
