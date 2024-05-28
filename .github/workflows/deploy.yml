@@ -68,7 +68,6 @@ jobs:
       - name: Save build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
           path: .next
 
   # Deployment job
