@@ -29,6 +29,8 @@ export default function Home() {
     window.location.reload();
   };
 
+  console.log(process.env.NEXT_PUBLIC_URL);
+
   return (
     <div className="container mx-auto p-8">
       <div className="border border-gray-300 p-4 lg:p-8 rounded-md shadow-md">
