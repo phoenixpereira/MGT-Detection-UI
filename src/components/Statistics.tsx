@@ -44,11 +44,6 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
         const response = await fetch("/combined_analysis.json");
         const data = await response.json();
 
-        const avgSentenceLength = calculateAvgSentenceLength(userText);
-        console.log(avgSentenceLength);
-        const humanLexicalDiversity = calculateLexicalDiversity(userText);
-        console.log(humanLexicalDiversity);
-
         setHumanData({
           lexicalDiversity: data.human.lexical_diversity_ranges,
           avgSentenceLength: data.human.avg_sentence_length_ranges,
