@@ -40,6 +40,8 @@ def main():
     ai_lexical_diversity_stats = combined_data["ai"]["lexical_diversity"]
     human_avg_sentence_length_stats = combined_data["human"]["average_word_count"]
     ai_avg_sentence_length_stats = combined_data["ai"]["average_word_count"]
+    human_avg_word_length_stats = combined_data["human"]["average_word_length"]
+    ai_avg_word_length_stats = combined_data["ai"]["average_word_length"]
     human_fk_grade_stats = combined_data["human"]["flesch_kincaid_grade"]
     ai_fk_grade_stats = combined_data["ai"]["flesch_kincaid_grade"]
 
@@ -49,18 +51,22 @@ def main():
     human_avg_sentence_length_data = prepare_data(
         human_avg_sentence_length_stats)
     ai_avg_sentence_length_data = prepare_data(ai_avg_sentence_length_stats)
+    human_avg_word_length_data = prepare_data(human_avg_word_length_stats)
+    ai_avg_word_length_data = prepare_data(ai_avg_word_length_stats)
     human_fk_grade_data = prepare_data(human_fk_grade_stats)
     ai_fk_grade_data = prepare_data(ai_fk_grade_stats)
 
     # Plot distributions
-    fig, axes = plt.subplots(1, 3, figsize=(27, 6))
+    fig, axes = plt.subplots(1, 4, figsize=(36, 6))
 
     plot_distribution(human_lexical_diversity_data,
                       ai_lexical_diversity_data, 'Lexical Diversity', axes[0])
     plot_distribution(human_avg_sentence_length_data,
                       ai_avg_sentence_length_data, 'Average Sentence Length', axes[1])
+    plot_distribution(human_avg_word_length_data,
+                      ai_avg_word_length_data, 'Average Word Length', axes[2])
     plot_distribution(human_fk_grade_data,
-                      ai_fk_grade_data, 'Flesch-Kincaid Grade Level', axes[2])
+                      ai_fk_grade_data, 'Flesch-Kincaid Grade Level', axes[3])
 
     plt.tight_layout()
     plt.savefig('distribution_graphs.png')

@@ -34,6 +34,14 @@ def total_syllables(text):
     return sum(count_syllables(word) for word in words)
 
 
+def average_word_length(text):
+    words = word_tokenize(text)
+    word_lengths = [len(word) for word in words]
+    if len(word_lengths) == 0:
+        return 0
+    return round(sum(word_lengths) / len(word_lengths), 2)
+
+
 def average_word_count(word_count, sentence_count):
     if sentence_count == 0:
         return 0
@@ -62,9 +70,11 @@ class TextAnalysis:
         self.word_count = len(self.words)
         self.sentence_count = count_sentences(text)
         self.syllable_count = total_syllables(text)
+        self.average_word_length = average_word_length(text)
 
     def analyze(self):
         return {
+            "average_word_length": self.average_word_length,
             "average_word_count": average_word_count(self.word_count, self.sentence_count),
             "lexical_diversity": lexical_diversity(self.words),
             "flesch_kincaid_grade": flesch_kincaid_grade(self.word_count, self.sentence_count, self.syllable_count)
@@ -91,7 +101,7 @@ def create_sorted_frequency_ranges(stats, min_val, max_val, range_size):
 
 def process_responses(responses, desc):
     analyses = {"lexical_diversity": [],
-                "average_word_count": [], "flesch_kincaid_grade": []}
+                "average_word_count": [], "average_word_length": [], "flesch_kincaid_grade": []}
     for answer in tqdm(responses, desc=desc):
         analysis = TextAnalysis(answer).analyze()
         for key, value in analysis.items():
@@ -107,6 +117,7 @@ def main():
         "range_settings": {
             "lexical_diversity": {"min_val": 0, "max_val": 1.05, "range_size": 0.05},
             "average_word_count": {"min_val": 0, "max_val": 100, "range_size": 5},
+            "average_word_length": {"min_val": 0, "max_val": 10, "range_size": 0.2},
             "flesch_kincaid_grade": {"min_val": 0, "max_val": 18, "range_size": 1},
         }
     }
