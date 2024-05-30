@@ -19,6 +19,8 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
   const chartRefs = {
     avgSentenceLengthRef: useRef<HTMLCanvasElement>(null),
     lexicalDiversityRef: useRef<HTMLCanvasElement>(null),
+    fkGradeRef: useRef<HTMLCanvasElement>(null),
+    avgWordLengthRef: useRef<HTMLCanvasElement>(null), // New canvas reference
   };
   const [humanData, setHumanData] = useState<Data>({});
   const [aiData, setAIData] = useState<Data>({});
@@ -38,6 +40,41 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
     return uniqueWords.size / words.length;
   };
 
+  // Function to calculate Flesch-Kincaid Grade Level
+  const calculateFKGradeLevel = (text: string): number => {
+    const totalWords = text.trim().split(/\s+/).length;
+    const totalSentences = text.split(/[.!?]/).length;
+    const totalSyllables = text
+      .trim()
+      .split(/\s+/)
+      .reduce((total, word) => {
+        // Simplified syllable count approximation
+        const syllables = word
+          .toLowerCase()
+          .replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "")
+          .match(/[aeiouy]{1,2}/g)?.length;
+        return total + (syllables ? syllables : 0);
+      }, 0);
+
+    const gradeLevel =
+      0.39 * (totalWords / totalSentences) +
+      11.8 * (totalSyllables / totalWords) -
+      16.59;
+
+    const gradeLevelEquivalent = parseFloat(
+      (1.49 - gradeLevel / 10).toFixed(2),
+    );
+
+    return gradeLevelEquivalent;
+  };
+
+  // Function to calculate Average Word Length
+  const calculateAvgWordLength = (text: string): number => {
+    const words = text.trim().split(/\s+/);
+    const totalLength = words.reduce((total, word) => total + word.length, 0);
+    return totalLength / words.length;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,13 +84,17 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
         const data = await response.json();
 
         setHumanData({
-          lexicalDiversity: data.human.lexical_diversity_ranges,
-          avgSentenceLength: data.human.avg_sentence_length_ranges,
+          lexicalDiversity: data.human.lexical_diversity,
+          avgSentenceLength: data.human.average_word_count,
+          fkGradeLevel: data.human.flesch_kincaid_grade,
+          avgWordLength: data.human.average_word_length, // Set human data for average word length
         });
 
         setAIData({
-          lexicalDiversity: data.ai.lexical_diversity_ranges,
-          avgSentenceLength: data.ai.avg_sentence_length_ranges,
+          lexicalDiversity: data.ai.lexical_diversity,
+          avgSentenceLength: data.ai.average_word_count,
+          fkGradeLevel: data.ai.flesch_kincaid_grade,
+          avgWordLength: data.ai.average_word_length, // Set AI data for average word length
         });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -75,7 +116,7 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       chartRefs.lexicalDiversityRef,
       humanData.lexicalDiversity,
       aiData.lexicalDiversity,
-      calculateLexicalDiversity(userText) * 18.5,
+      calculateLexicalDiversity(userText) * 16,
     );
     createChart(
       "Average Sentence Length",
@@ -84,6 +125,20 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       aiData.avgSentenceLength,
       calculateAvgSentenceLength(userText) * 0.2,
     );
+    createChart(
+      "Flesch-Kincaid Grade Level",
+      chartRefs.fkGradeRef,
+      humanData.fkGradeLevel,
+      aiData.fkGradeLevel,
+      calculateFKGradeLevel(userText) * 1.0,
+    );
+    createChart(
+      "Average Word Length",
+      chartRefs.avgWordLengthRef,
+      humanData.avgWordLength,
+      aiData.avgWordLength,
+      calculateAvgWordLength(userText) * 3.85,
+    );
   };
 
   const createChart = (
@@ -91,7 +146,7 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
     chartRef: React.RefObject<HTMLCanvasElement>,
     humanData: { [key: string]: number },
     aiData: { [key: string]: number },
-    userTextValue: number, // Pass userText value to the function
+    userTextValue: number,
   ) => {
     if (chartRef.current) {
       const ctx = chartRef.current.getContext("2d");
@@ -99,7 +154,6 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       if (ctx) {
         const labels = Object.keys(humanData);
 
-        // Destroy existing chart if it exists
         //@ts-ignore
         if (chartRef.current.chart) {
           //@ts-ignore
@@ -132,8 +186,8 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
           options: {
             scales: {
               x: {
-                type: "category", // Explicitly set the scale type to category
-                labels: labels, // Ensure all labels are present
+                type: "category",
+                labels: labels,
                 ticks: {
                   maxTicksLimit: 10,
                 },
@@ -141,8 +195,16 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
               y: {
                 beginAtZero: true,
                 suggestedMin:
-                  title === "Average Sentence Length" ? 0 : undefined, // Set suggestedMin based on the chart title
-                suggestedMax: title === "Average Sentence Length" ? 100 : 1, // Set suggestedMax based on the chart title
+                  title === "Average Sentence Length" ||
+                  title === "Flesch-Kincaid Grade Level"
+                    ? 0
+                    : undefined,
+                suggestedMax:
+                  title === "Average Sentence Length"
+                    ? 100
+                    : title === "Flesch-Kincaid Grade Level"
+                      ? 18
+                      : 20, // Set max value for Average Word Length
               },
             },
             plugins: {
@@ -181,17 +243,31 @@ const Statistics: React.FunctionComponent<StatisticsProps> = ({ userText }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="flex mr-8">
           <div className="w-full">
-            <h4>Average Sentence Length</h4>
-            <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
-          </div>
-          <Tooltip info="The average sentence length is the average number of words per sentence in the text." />
-        </div>
-        <div className="flex mr-8">
-          <div className="w-full">
             <h4>Lexical Diversity</h4>
             <canvas ref={chartRefs.lexicalDiversityRef}></canvas>
           </div>
-          <Tooltip info="The lexical diversity is a measure of how many different words appear in a text. It is the ratio of unique lexical items divided by the total number of words in the text." />
+          <Tooltip info="A measure of how many different words appear in a text. It is the ratio of unique lexical items divided by the total number of words in the text." />
+        </div>
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Readability</h4>
+            <canvas ref={chartRefs.fkGradeRef}></canvas>
+          </div>
+          <Tooltip info="Indicates the level of education required to understand a piece of text. It is based on the average number of syllables per word and words per sentence." />
+        </div>
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Average Sentence Length</h4>
+            <canvas ref={chartRefs.avgSentenceLengthRef}></canvas>
+          </div>
+          <Tooltip info="The average number of words per sentence in the text." />
+        </div>
+        <div className="flex mr-8">
+          <div className="w-full">
+            <h4>Average Word Length</h4>
+            <canvas ref={chartRefs.avgWordLengthRef}></canvas>
+          </div>
+          <Tooltip info="The average number of characters per word in the text." />
         </div>
       </div>
     </div>
