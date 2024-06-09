@@ -57,16 +57,16 @@ def main():
     ai_fk_grade_data = prepare_data(ai_fk_grade_stats)
 
     # Plot distributions
-    fig, axes = plt.subplots(1, 4, figsize=(36, 6))
+    fig, axes = plt.subplots(2, 2, figsize=(18, 12))
 
     plot_distribution(human_lexical_diversity_data,
-                      ai_lexical_diversity_data, 'Lexical Diversity', axes[0])
+                      ai_lexical_diversity_data, 'Lexical Diversity', axes[0, 0])
     plot_distribution(human_avg_sentence_length_data,
-                      ai_avg_sentence_length_data, 'Average Sentence Length', axes[1])
+                      ai_avg_sentence_length_data, 'Average Sentence Length', axes[0, 1])
     plot_distribution(human_avg_word_length_data,
-                      ai_avg_word_length_data, 'Average Word Length', axes[2])
+                      ai_avg_word_length_data, 'Average Word Length', axes[1, 0])
     plot_distribution(human_fk_grade_data,
-                      ai_fk_grade_data, 'Flesch-Kincaid Grade Level', axes[3])
+                      ai_fk_grade_data, 'Readability', axes[1, 1])
 
     plt.tight_layout()
     plt.savefig('distribution_graphs.png')
